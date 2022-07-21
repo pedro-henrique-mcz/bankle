@@ -2,6 +2,7 @@
     
     require_once(dirname(__FILE__,2) . "/global/Settings.php");
     require_once(dirname(__FILE__,2) . "/dao/PaintingDAO.php");
+    require_once(dirname(__FILE__,2) . "/model/Message.php");
 
     session_start();
     
@@ -11,6 +12,9 @@
     }
  
     $paintingDAO = new PaintingDAO($settings->getConn());
+    
+    $message = new Message($settings->getConn());
+
 
     //alterações no banco
     if(!empty($data)){
@@ -22,9 +26,17 @@
             $description = $data["description"];
             $image = $imageFile["image"];
 
-            $painting = new Painting($name, $author, $description, $image);
+            if( $name && $author && $description && $image){
+                
+                $painting = new Painting($name, $author, $description, $image);
+                
+                $paintingDAO->create($painting);
 
-            $paintingDAO->create($painting);
+            }else{
+
+                $message->setMessage("Preencha todos os dados", "error", "back");
+
+            }
 
         } else if($data["type"] === "edit"){
 

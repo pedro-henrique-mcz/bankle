@@ -1,9 +1,13 @@
 <?php 
+    
     include_once("controller/process_test.php");
 
-    if(isset($_SESSION['msg'])) {
-        $msg = $_SESSION['msg'];
-        $_SESSION['msg'] = '';
+    $message = new Message($settings->getUrl());
+
+    $flashMessage = $message->getMessage();
+
+    if(!empty($flashMessage["msg"])){
+        $message->clearMessage();
     }
 
 ?>
@@ -44,6 +48,9 @@
             </div>
         <?php endif; ?>
     </header>
+    <div class="mensage-container">
+        <p><?= $flashMessage["msg"] ?></p>
+    </div>
     <div id="wrapper">
         <div class="body-content">
 
